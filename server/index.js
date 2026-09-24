@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const { initDb } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,29 +20,22 @@ app.use('/api/goals', require('./routes/goals'));
 app.use('/api/debts', require('./routes/debts'));
 app.use('/api/recurring', require('./routes/recurring'));
 
-
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'SpendWise Personal đang chạy!', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok', message: 'SpendWise Personal đang chạy! (Supabase)', timestamp: new Date().toISOString() });
 });
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
-async function main() {
-  try {
-    await initDb();
-    app.listen(PORT, () => {
-      console.log(`\n🚀 SpendWise Personal: http://localhost:${PORT}`);
-      console.log(`💎 Ứng dụng Quản lý Chi tiêu Cá nhân trên Cloud`);
-      console.log(`💡 Tài khoản mẫu: demo@example.com / demo123\n`);
-    });
-  } catch (err) {
-    console.error('❌ Khởi động thất bại:', err);
-    process.exit(1);
-  }
+// Chỉ start server khi chạy trực tiếp (không phải Vercel serverless)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 SpendWise Personal: http://localhost:${PORT}`);
+    console.log(`💎 Ứng dụng Quản lý Chi tiêu Cá nhân trên Cloud`);
+    console.log(`⚡ Đang sử dụng Supabase Cloud Database\n`);
+  });
 }
 
-main();
 module.exports = app;
 

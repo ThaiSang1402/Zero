@@ -1,80 +1,92 @@
 const express = require('express');
-const { getDb } = require('../db');
+const { supabase } = require('../supabase');
 const { authMiddleware } = require('../middleware/auth');
 
 const router = express.Router();
 router.use(authMiddleware);
 
 // GET /api/goals — Lấy các mục tiêu tiết kiệm
-router.get('/', (req, res) => {
-  const db = getDb();
-  const goals = db.prepare('SELECT * FROM goals_view WHERE user_id = ?').all ? 
-                db.prepare('SELECT * FROM savings_goals WHERE user_id = ? ORDER BY deadline ASC, created_at DESC').all(req.user.id) : [];
-  res.json(goals);
+router.get('/', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('savings_goals').select('*')
+      .eq('user_id', req.user.id)
+      .order('deadline', { ascending: true, nullsFirst: false })
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi server.' });
+  }
 });
 
 // POST /api/goals — Tạo mục tiêu tiết kiệm mới
-router.post('/', (req, res) => {
-  const { name, target_amount, current_amount = 0, deadline, icon, color } = req.body;
-  if (!name || !target_amount || Number(target_amount) <= 0) {
-    return res.status(400).json({ error: 'Tên mục tiêu và số tiền mục tiêu phải hợp lệ (> 0).' });
+router.post('/', async (req, res) => {
+  try {
+    const { name, target_amount, current_amount = 0, deadline, icon, color } = req.body;
+    if (!name || !target_amount || Number(target_amount) <= 0) {
+      return res.status(400).json({ error: 'Tên mục tiêu và số tiền mục tiêu phải hợp lệ (> 0).' });
+    }
+
+    const { data, error } = await supabase.from('savings_goals').insert({
+      user_id: req.user.id,
+      name,
+      target_amount: Number(target_amount),
+      current_amount: Number(current_amount) || 0,
+      deadline: deadline || null,
+      icon: icon || '🎯',
+      color: color || '#8b5cf6',
+    }).select().single();
+
+    if (error) throw error;
+    res.status(201).json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi server.' });
   }
-
-  const db = getDb();
-  const result = db.prepare(`
-    INSERT INTO savings_goals (user_id, name, target_amount, current_amount, deadline, icon, color)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).run(
-    req.user.id,
-    name,
-    Number(target_amount),
-    Number(current_amount) || 0,
-    deadline || null,
-    icon || '🎯',
-    color || '#8b5cf6'
-  );
-
-  const goal = db.prepare('SELECT * FROM savings_goals WHERE id = ?').get(result.lastInsertRowid);
-  res.status(201).json(goal);
 });
 
 // POST /api/goals/:id/deposit — Thêm tiền vào mục tiêu tiết kiệm
-router.post('/:id/deposit', (req, res) => {
-  const { amount, wallet_id } = req.body;
-  const depositAmount = Number(amount);
-  if (!depositAmount || depositAmount <= 0) return res.status(400).json({ error: 'Số tiền nạp phải lớn hơn 0.' });
+router.post('/:id/deposit', async (req, res) => {
+  try {
+    const { amount, wallet_id } = req.body;
+    const depositAmount = Number(amount);
+    if (!depositAmount || depositAmount <= 0) return res.status(400).json({ error: 'Số tiền nạp phải lớn hơn 0.' });
 
-  const db = getDb();
-  const goal = db.prepare('SELECT * FROM savings_goals WHERE id = ? AND user_id = ?').get(req.params.id, req.user.id);
-  if (!goal) return res.status(404).json({ error: 'Không tìm thấy mục tiêu tiết kiệm.' });
+    const { data: goal, error: findErr } = await supabase.from('savings_goals').select('*')
+      .eq('id', req.params.id).eq('user_id', req.user.id).single();
+    if (findErr || !goal) return res.status(404).json({ error: 'Không tìm thấy mục tiêu tiết kiệm.' });
 
-  if (wallet_id) {
-    const wallet = db.prepare('SELECT * FROM wallets WHERE id = ? AND user_id = ?').get(wallet_id, req.user.id);
-    if (!wallet) return res.status(404).json({ error: 'Không tìm thấy ví tiền.' });
-    if (wallet.balance < depositAmount) return res.status(400).json({ error: `Số dư ví "${wallet.name}" không đủ.` });
-    
-    // Trừ tiền khỏi ví và cộng vào mục tiêu tiết kiệm trong transaction
-    const depositTx = db.transaction(() => {
-      db.prepare('UPDATE wallets SET balance = balance - ? WHERE id = ?').run(depositAmount, wallet.id);
-      db.prepare('UPDATE savings_goals SET current_amount = current_amount + ? WHERE id = ?').run(depositAmount, goal.id);
-    });
-    depositTx();
-  } else {
-    db.prepare('UPDATE savings_goals SET current_amount = current_amount + ? WHERE id = ?').run(depositAmount, goal.id);
+    if (wallet_id) {
+      const { data: wallet } = await supabase.from('wallets').select('*')
+        .eq('id', wallet_id).eq('user_id', req.user.id).single();
+      if (!wallet) return res.status(404).json({ error: 'Không tìm thấy ví tiền.' });
+      if (Number(wallet.balance) < depositAmount) return res.status(400).json({ error: `Số dư ví "${wallet.name}" không đủ.` });
+      await supabase.from('wallets').update({ balance: Number(wallet.balance) - depositAmount }).eq('id', wallet.id);
+    }
+
+    const { data: updated, error: updateErr } = await supabase.from('savings_goals')
+      .update({ current_amount: Number(goal.current_amount) + depositAmount })
+      .eq('id', goal.id).select().single();
+
+    if (updateErr) throw updateErr;
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi server.' });
   }
-
-  const updatedGoal = db.prepare('SELECT * FROM savings_goals WHERE id = ?').get(goal.id);
-  res.json(updatedGoal);
 });
 
 // DELETE /api/goals/:id — Xóa mục tiêu
-router.delete('/:id', (req, res) => {
-  const db = getDb();
-  const goal = db.prepare('SELECT * FROM savings_goals WHERE id = ? AND user_id = ?').get(req.params.id, req.user.id);
-  if (!goal) return res.status(404).json({ error: 'Không tìm thấy mục tiêu tiết kiệm.' });
+router.delete('/:id', async (req, res) => {
+  try {
+    const { data: goal, error: findErr } = await supabase.from('savings_goals').select('*')
+      .eq('id', req.params.id).eq('user_id', req.user.id).single();
+    if (findErr || !goal) return res.status(404).json({ error: 'Không tìm thấy mục tiêu tiết kiệm.' });
 
-  db.prepare('DELETE FROM savings_goals WHERE id = ?').run(goal.id);
-  res.json({ message: 'Đã xóa mục tiêu tiết kiệm.' });
+    const { error } = await supabase.from('savings_goals').delete().eq('id', goal.id);
+    if (error) throw error;
+    res.json({ message: 'Đã xóa mục tiêu tiết kiệm.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi server.' });
+  }
 });
 
 module.exports = router;
