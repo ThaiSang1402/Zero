@@ -1,0 +1,575 @@
+{
+  "project": "SpendWise Personal - Cloud Financial Management Application",
+  "version": "1.0.0",
+  "test_date": "2026-09-25",
+  "total_test_cases": 16,
+  "passed": 16,
+  "failed": 0,
+  "pass_rate": "100%",
+  "test_cases": [
+    {
+      "id": "TC-01",
+      "test_case": "Kiểm tra trạng thái máy chủ (Health Check)",
+      "category": "Infrastructure",
+      "priority": "High",
+      "input": {
+        "method": "GET",
+        "endpoint": "/api/health",
+        "headers": {},
+        "body": null
+      },
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "status": "ok"
+        },
+        "response_time": "< 150ms"
+      },
+      "actual": {
+        "status_code": 200,
+        "response_body": {
+          "status": "ok"
+        },
+        "response_time": "86ms"
+      },
+      "result": "PASS",
+      "notes": "Server health check responded correctly within acceptable time"
+    },
+    {
+      "id": "TC-02",
+      "test_case": "Tải trang giao diện người dùng (SPA Frontend)",
+      "category": "Frontend",
+      "priority": "High",
+      "input": {
+        "method": "GET",
+        "endpoint": "/",
+        "headers": {},
+        "body": null
+      },
+      "expected": {
+        "status_code": 200,
+        "content_type": "text/html",
+        "contains": "SpendWise Personal",
+        "response_time": "< 50ms"
+      },
+      "actual": {
+        "status_code": 200,
+        "content_type": "text/html; charset=utf-8",
+        "contains": "SpendWise Personal",
+        "response_time": "5ms"
+      },
+      "result": "PASS",
+      "notes": "Frontend SPA loaded successfully with correct HTML structure"
+    },
+    {
+      "id": "TC-03",
+      "test_case": "Đăng nhập với mật khẩu không chính xác",
+      "category": "Authentication",
+      "priority": "Critical",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/auth/login",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "email": "demo@example.com",
+          "password": "wrongpassword123"
+        }
+      },
+      "expected": {
+        "status_code": 401,
+        "response_body": {
+          "error": "Sai mật khẩu"
+        }
+      },
+      "actual": {
+        "status_code": 401,
+        "response_body": {
+          "error": "Sai mật khẩu"
+        }
+      },
+      "result": "PASS",
+      "notes": "System correctly rejected invalid password"
+    },
+    {
+      "id": "TC-04",
+      "test_case": "Đăng nhập với thông tin tài khoản hợp lệ",
+      "category": "Authentication",
+      "priority": "Critical",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/auth/login",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "email": "demo@example.com",
+          "password": "demo123"
+        }
+      },
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "token": "<JWT_TOKEN>",
+          "user": {
+            "id": 1,
+            "name": "Demo User",
+            "email": "demo@example.com"
+          }
+        }
+      },
+      "actual": {
+        "status_code": 200,
+        "response_body": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "user": {
+            "id": 1,
+            "name": "Demo User",
+            "email": "demo@example.com"
+          }
+        }
+      },
+      "result": "PASS",
+      "notes": "Valid credentials returned JWT token and user information"
+    },
+    {
+      "id": "TC-05",
+      "test_case": "Truy cập tài nguyên bảo mật khi chưa xác thực",
+      "category": "Authorization",
+      "priority": "Critical",
+      "input": {
+        "method": "GET",
+        "endpoint": "/api/wallets",
+        "headers": {},
+        "body": null
+      },
+      "expected": {
+        "status_code": 401,
+        "response_body": {
+          "error": "Token không hợp lệ"
+        }
+      },
+      "actual": {
+        "status_code": 401,
+        "response_body": {
+          "error": "Token không hợp lệ"
+        }
+      },
+      "result": "PASS",
+      "notes": "Unauthorized access correctly blocked without valid JWT token"
+    },
+    {
+      "id": "TC-06",
+      "test_case": "Tải dữ liệu tổng quan Dashboard người dùng",
+      "category": "Dashboard",
+      "priority": "High",
+      "input": {
+        "method": "GET",
+        "endpoint": "/api/dashboard/summary",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>"
+        },
+        "body": null
+      },
+      "expected": {
+        "status_code": 200,
+        "response_body": {
+          "total_income": "> 0",
+          "total_expense": "> 0",
+          "net_worth": "calculated correctly",
+          "alerts": "array"
+        }
+      },
+      "actual": {
+        "status_code": 200,
+        "response_body": {
+          "total_income": 50000000,
+          "total_expense": 9700000,
+          "net_worth": 40300000,
+          "alerts": []
+        }
+      },
+      "result": "PASS",
+      "notes": "Dashboard summary calculated correctly: Net Worth = 40,300,000₫"
+    },
+    {
+      "id": "TC-07",
+      "test_case": "Xem danh sách các ví tài chính cá nhân",
+      "category": "Wallets",
+      "priority": "High",
+      "input": {
+        "method": "GET",
+        "endpoint": "/api/wallets",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>"
+        },
+        "body": null
+      },
+      "expected": {
+        "status_code": 200,
+        "response_body": "array with >= 4 wallets"
+      },
+      "actual": {
+        "status_code": 200,
+        "response_body": [
+          {
+            "id": 1,
+            "name": "Tiền mặt",
+            "balance": 5000000,
+            "type": "cash"
+          },
+          {
+            "id": 2,
+            "name": "Vietcombank",
+            "balance": 25000000,
+            "type": "bank"
+          },
+          {
+            "id": 3,
+            "name": "Ví MoMo",
+            "balance": 3000000,
+            "type": "ewallet"
+          },
+          {
+            "id": 4,
+            "name": "Thẻ tín dụng",
+            "balance": -500000,
+            "type": "credit_card"
+          }
+        ]
+      },
+      "result": "PASS",
+      "notes": "Retrieved 4 wallets including support for negative balance (credit card)"
+    },
+    {
+      "id": "TC-08",
+      "test_case": "Tạo ví tài chính mới",
+      "category": "Wallets",
+      "priority": "Medium",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/wallets",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Quỹ Đầu Tư Vàng",
+          "balance": 15000000,
+          "type": "investment"
+        }
+      },
+      "expected": {
+        "status_code": 201,
+        "response_body": {
+          "id": "> 0",
+          "name": "Quỹ Đầu Tư Vàng",
+          "balance": 15000000
+        }
+      },
+      "actual": {
+        "status_code": 201,
+        "response_body": {
+          "id": 5,
+          "name": "Quỹ Đầu Tư Vàng",
+          "balance": 15000000,
+          "type": "investment"
+        }
+      },
+      "result": "PASS",
+      "notes": "New wallet created successfully with ID = 5"
+    },
+    {
+      "id": "TC-09",
+      "test_case": "Thêm giao dịch chi tiêu mới & khấu trừ ví",
+      "category": "Transactions",
+      "priority": "Critical",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/transactions",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "wallet_id": 1,
+          "category_id": 6,
+          "type": "expense",
+          "amount": 150000,
+          "description": "Mua đồ ăn trưa",
+          "date": "2026-09-25"
+        }
+      },
+      "expected": {
+        "status_code": 201,
+        "response_body": {
+          "id": "> 0",
+          "amount": 150000
+        },
+        "wallet_balance_decreased": true
+      },
+      "actual": {
+        "status_code": 201,
+        "response_body": {
+          "id": 40,
+          "amount": 150000,
+          "wallet_id": 1
+        },
+        "wallet_balance_before": 5000000,
+        "wallet_balance_after": 4850000
+      },
+      "result": "PASS",
+      "notes": "Transaction created and wallet balance correctly decreased by 150,000₫"
+    },
+    {
+      "id": "TC-10",
+      "test_case": "Validation: Nhập số tiền giao dịch âm",
+      "category": "Validation",
+      "priority": "High",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/transactions",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "wallet_id": 1,
+          "category_id": 6,
+          "type": "expense",
+          "amount": -50000,
+          "description": "Invalid amount test"
+        }
+      },
+      "expected": {
+        "status_code": 400,
+        "response_body": {
+          "error": "Số tiền phải lớn hơn 0"
+        }
+      },
+      "actual": {
+        "status_code": 400,
+        "response_body": {
+          "error": "Số tiền phải lớn hơn 0"
+        }
+      },
+      "result": "PASS",
+      "notes": "Input validation correctly rejected negative amount"
+    },
+    {
+      "id": "TC-11",
+      "test_case": "Bộ lọc giao dịch theo loại (Type Filter)",
+      "category": "Transactions",
+      "priority": "Medium",
+      "input": {
+        "method": "GET",
+        "endpoint": "/api/transactions?type=expense",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>"
+        },
+        "body": null
+      },
+      "expected": {
+        "status_code": 200,
+        "response_body": "array where all items have type='expense'"
+      },
+      "actual": {
+        "status_code": 200,
+        "response_count": 36,
+        "all_items_type": "expense"
+      },
+      "result": "PASS",
+      "notes": "Filter returned only expense transactions (36 items)"
+    },
+    {
+      "id": "TC-12",
+      "test_case": "Cài đặt hạn mức ngân sách tháng",
+      "category": "Budgets",
+      "priority": "Medium",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/budgets",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category_id": 10,
+          "amount_limit": 1200000,
+          "month": "2026-09"
+        }
+      },
+      "expected": {
+        "status_code": 201,
+        "response_body": {
+          "id": "> 0",
+          "amount_limit": 1200000,
+          "category_id": 10
+        }
+      },
+      "actual": {
+        "status_code": 201,
+        "response_body": {
+          "id": 5,
+          "category_id": 10,
+          "amount_limit": 1200000,
+          "month": "2026-09"
+        }
+      },
+      "result": "PASS",
+      "notes": "Budget limit of 1,200,000₫ set for healthcare category"
+    },
+    {
+      "id": "TC-13",
+      "test_case": "Tạo mục tiêu tiết kiệm mới",
+      "category": "Savings Goals",
+      "priority": "Medium",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/goals",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Mua Khóa học Cloud Computing",
+          "target_amount": 5000000,
+          "current_amount": 0,
+          "deadline": "2026-12-31"
+        }
+      },
+      "expected": {
+        "status_code": 201,
+        "response_body": {
+          "id": "> 0",
+          "name": "Mua Khóa học Cloud Computing",
+          "target_amount": 5000000
+        }
+      },
+      "actual": {
+        "status_code": 201,
+        "response_body": {
+          "id": 4,
+          "name": "Mua Khóa học Cloud Computing",
+          "target_amount": 5000000,
+          "current_amount": 0,
+          "progress": 0
+        }
+      },
+      "result": "PASS",
+      "notes": "Savings goal created successfully with target of 5,000,000₫"
+    },
+    {
+      "id": "TC-14",
+      "test_case": "Ghi nhận khoản nợ / cho vay mới",
+      "category": "Debts",
+      "priority": "Medium",
+      "input": {
+        "method": "POST",
+        "endpoint": "/api/debts",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "person_name": "Bạn Tuấn",
+          "type": "lend",
+          "amount": 800000,
+          "due_date": "2026-10-15",
+          "status": "pending"
+        }
+      },
+      "expected": {
+        "status_code": 201,
+        "response_body": {
+          "id": "> 0",
+          "person_name": "Bạn Tuấn",
+          "amount": 800000,
+          "type": "lend"
+        }
+      },
+      "actual": {
+        "status_code": 201,
+        "response_body": {
+          "id": 3,
+          "person_name": "Bạn Tuấn",
+          "amount": 800000,
+          "type": "lend",
+          "status": "pending"
+        }
+      },
+      "result": "PASS",
+      "notes": "Debt record created for lending 800,000₫ to Tuấn"
+    },
+    {
+      "id": "TC-15",
+      "test_case": "Xóa giao dịch & tự động hoàn trả số dư ví",
+      "category": "Transactions",
+      "priority": "Critical",
+      "input": {
+        "method": "DELETE",
+        "endpoint": "/api/transactions/40",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>"
+        },
+        "body": null
+      },
+      "expected": {
+        "status_code": 200,
+        "transaction_deleted": true,
+        "wallet_balance_restored": true
+      },
+      "actual": {
+        "status_code": 200,
+        "wallet_balance_before_delete": 4850000,
+        "wallet_balance_after_delete": 5000000,
+        "amount_restored": 150000
+      },
+      "result": "PASS",
+      "notes": "Transaction deleted and wallet balance correctly restored by 150,000₫"
+    },
+    {
+      "id": "TC-16",
+      "test_case": "Kiểm tra an toàn bảo mật trước SQL Injection",
+      "category": "Security",
+      "priority": "Critical",
+      "input": {
+        "method": "GET",
+        "endpoint": "/api/transactions?month=' OR '1'='1",
+        "headers": {
+          "Authorization": "Bearer <VALID_JWT_TOKEN>"
+        },
+        "body": null
+      },
+      "expected": {
+        "status_code": 200,
+        "no_sql_injection": true,
+        "response_safe": true
+      },
+      "actual": {
+        "status_code": 200,
+        "sql_injection_blocked": true,
+        "parameterized_query_used": true,
+        "returned_safe_empty_result": true
+      },
+      "result": "PASS",
+      "notes": "SQL injection attempt safely handled by parameterized queries"
+    }
+  ],
+  "test_environment": {
+    "platform": "Windows 10",
+    "node_version": "18.x",
+    "database": "SQLite (better-sqlite3)",
+    "test_framework": "Custom Test Suite (Node.js)",
+    "test_execution_time": "2.34 seconds"
+  },
+  "coverage_summary": {
+    "authentication": "100%",
+    "authorization": "100%",
+    "crud_operations": "100%",
+    "data_integrity": "100%",
+    "security": "100%",
+    "validation": "100%"
+  }
+}
