@@ -17,8 +17,11 @@ if (SUPABASE_URL && SUPABASE_KEY) {
     }
   });
   console.log('⚡ Đã kết nối Supabase Cloud Client:', SUPABASE_URL);
+} else if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+  console.error('❌ THIẾU biến môi trường SUPABASE_URL hoặc SUPABASE_KEY! Vui lòng cấu hình trong Vercel Environment Variables.');
+  // Không throw error để server vẫn khởi động, nhưng API sẽ trả lỗi rõ ràng
 } else {
-  console.log('ℹ️ Chưa cấu hình SUPABASE_URL / SUPABASE_KEY trong .env (đang dùng chế độ SQLite mặc định).');
+  console.log('ℹ️ Chưa cấu hình SUPABASE_URL / SUPABASE_KEY trong .env (đang dùng chế độ local).');
 }
 
 /**
