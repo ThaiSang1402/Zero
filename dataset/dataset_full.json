@@ -1,0 +1,962 @@
+{
+  "metadata": {
+    "project": "SpendWise Personal Cloud Application",
+    "version": "1.0.0",
+    "exported_at": "2026-09-24T21:47:35.248Z",
+    "counts": {
+      "users": 1,
+      "wallets": 8,
+      "categories": 14,
+      "transactions": 40,
+      "budgets": 5,
+      "savings_goals": 7,
+      "debts": 6,
+      "recurring_rules": 3
+    }
+  },
+  "users": [
+    {
+      "id": 1,
+      "name": "Nguyễn Văn A",
+      "email": "demo@example.com",
+      "password": "$2a$10$95BRfpKyfrr2RaFpesfqLO5NnQ7EqEC5ojuyCsNrTvvUn9a8pe8x.",
+      "created_at": "2026-09-24 21:20:20"
+    }
+  ],
+  "wallets": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "name": "Tiền mặt",
+      "type": "cash",
+      "balance": 2500000,
+      "icon": "💵",
+      "color": "#10b981",
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "name": "Vietcombank",
+      "type": "bank",
+      "balance": 38500000,
+      "icon": "🏦",
+      "color": "#3b82f6",
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "name": "Ví MoMo",
+      "type": "ewallet",
+      "balance": 1800000,
+      "icon": "📱",
+      "color": "#ec4899",
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "name": "Thẻ Tín Dụng",
+      "type": "credit",
+      "balance": -2500000,
+      "icon": "💳",
+      "color": "#f59e0b",
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "name": "Quỹ Đầu Tư Vàng",
+      "type": "bank",
+      "balance": 14850000,
+      "icon": "🪙",
+      "color": "#eab308",
+      "created_at": "2026-09-24 21:22:42"
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "name": "Quỹ Đầu Tư Vàng",
+      "type": "bank",
+      "balance": 15000000,
+      "icon": "🪙",
+      "color": "#eab308",
+      "created_at": "2026-09-24 21:23:13"
+    },
+    {
+      "id": 7,
+      "user_id": 1,
+      "name": "Quỹ Đầu Tư Vàng",
+      "type": "bank",
+      "balance": 15000000,
+      "icon": "🪙",
+      "color": "#eab308",
+      "created_at": "2026-09-24 21:23:29"
+    },
+    {
+      "id": 8,
+      "user_id": 1,
+      "name": "Quỹ Đầu Tư Vàng",
+      "type": "bank",
+      "balance": 15000000,
+      "icon": "🪙",
+      "color": "#eab308",
+      "created_at": "2026-09-24 21:33:47"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Lương",
+      "icon": "💼",
+      "type": "income",
+      "color": "#10b981"
+    },
+    {
+      "id": 2,
+      "name": "Freelance",
+      "icon": "💻",
+      "type": "income",
+      "color": "#06b6d4"
+    },
+    {
+      "id": 3,
+      "name": "Đầu tư",
+      "icon": "📈",
+      "type": "income",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": 4,
+      "name": "Quà tặng",
+      "icon": "🎁",
+      "type": "income",
+      "color": "#f59e0b"
+    },
+    {
+      "id": 5,
+      "name": "Thu nhập khác",
+      "icon": "💰",
+      "type": "income",
+      "color": "#84cc16"
+    },
+    {
+      "id": 6,
+      "name": "Ăn uống",
+      "icon": "🍜",
+      "type": "expense",
+      "color": "#f97316"
+    },
+    {
+      "id": 7,
+      "name": "Di chuyển",
+      "icon": "🚗",
+      "type": "expense",
+      "color": "#3b82f6"
+    },
+    {
+      "id": 8,
+      "name": "Mua sắm",
+      "icon": "🛍️",
+      "type": "expense",
+      "color": "#ec4899"
+    },
+    {
+      "id": 9,
+      "name": "Giải trí",
+      "icon": "🎮",
+      "type": "expense",
+      "color": "#a855f7"
+    },
+    {
+      "id": 10,
+      "name": "Y tế",
+      "icon": "🏥",
+      "type": "expense",
+      "color": "#ef4444"
+    },
+    {
+      "id": 11,
+      "name": "Giáo dục",
+      "icon": "📚",
+      "type": "expense",
+      "color": "#14b8a6"
+    },
+    {
+      "id": 12,
+      "name": "Hóa đơn",
+      "icon": "🧾",
+      "type": "expense",
+      "color": "#64748b"
+    },
+    {
+      "id": 13,
+      "name": "Nhà ở",
+      "icon": "🏠",
+      "type": "expense",
+      "color": "#78716c"
+    },
+    {
+      "id": 14,
+      "name": "Chi khác",
+      "icon": "💸",
+      "type": "expense",
+      "color": "#6b7280"
+    }
+  ],
+  "budgets": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "category_id": 6,
+      "amount_limit": 4000000,
+      "month": "2026-09",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Ăn uống"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "category_id": 8,
+      "amount_limit": 2000000,
+      "month": "2026-09",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Mua sắm"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "category_id": 9,
+      "amount_limit": 1500000,
+      "month": "2026-09",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Giải trí"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "category_id": 7,
+      "amount_limit": 1000000,
+      "month": "2026-09",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Di chuyển"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "category_id": 10,
+      "amount_limit": 1200000,
+      "month": "2026-09",
+      "created_at": "2026-09-24 21:22:42",
+      "category_name": "Y tế"
+    }
+  ],
+  "savings_goals": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "name": "Mua Macbook Pro M3",
+      "target_amount": 35000000,
+      "current_amount": 18000000,
+      "deadline": "2026-12-31",
+      "icon": "💻",
+      "color": "#3b82f6",
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "name": "Quỹ Khẩn Cấp",
+      "target_amount": 50000000,
+      "current_amount": 30000000,
+      "deadline": "2026-10-01",
+      "icon": "🛡️",
+      "color": "#10b981",
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "name": "Du lịch Nhật Bản",
+      "target_amount": 25000000,
+      "current_amount": 8500000,
+      "deadline": "2027-04-15",
+      "icon": "✈️",
+      "color": "#ec4899",
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "name": "Mua Khóa học Cloud DevOps",
+      "target_amount": 5000000,
+      "current_amount": 0,
+      "deadline": "2026-11-30",
+      "icon": "🎓",
+      "color": "#8b5cf6",
+      "created_at": "2026-09-24 21:22:42"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "name": "Mua Khóa học Cloud DevOps",
+      "target_amount": 5000000,
+      "current_amount": 0,
+      "deadline": "2026-11-30",
+      "icon": "🎓",
+      "color": "#8b5cf6",
+      "created_at": "2026-09-24 21:23:13"
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "name": "Mua Khóa học Cloud DevOps",
+      "target_amount": 5000000,
+      "current_amount": 0,
+      "deadline": "2026-11-30",
+      "icon": "🎓",
+      "color": "#8b5cf6",
+      "created_at": "2026-09-24 21:23:29"
+    },
+    {
+      "id": 7,
+      "user_id": 1,
+      "name": "Mua Khóa học Cloud DevOps",
+      "target_amount": 5000000,
+      "current_amount": 0,
+      "deadline": "2026-11-30",
+      "icon": "🎓",
+      "color": "#8b5cf6",
+      "created_at": "2026-09-24 21:33:47"
+    }
+  ],
+  "debts": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "person_name": "Anh Nam (Đồng nghiệp)",
+      "type": "lend",
+      "amount": 2000000,
+      "due_date": "2026-09-15",
+      "note": "Cho vay tiền mừng cưới",
+      "is_paid": 0,
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "person_name": "Anh Hùng",
+      "type": "borrow",
+      "amount": 500000,
+      "due_date": "2026-09-10",
+      "note": "Nợ tiền vé xem ca nhạc",
+      "is_paid": 0,
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "person_name": "Bạn Tuấn",
+      "type": "lend",
+      "amount": 800000,
+      "due_date": "2026-10-15",
+      "note": "Cho mượn tiền xăng xe",
+      "is_paid": 0,
+      "created_at": "2026-09-24 21:22:42"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "person_name": "Bạn Tuấn",
+      "type": "lend",
+      "amount": 800000,
+      "due_date": "2026-10-15",
+      "note": "Cho mượn tiền xăng xe",
+      "is_paid": 0,
+      "created_at": "2026-09-24 21:23:13"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "person_name": "Bạn Tuấn",
+      "type": "lend",
+      "amount": 800000,
+      "due_date": "2026-10-15",
+      "note": "Cho mượn tiền xăng xe",
+      "is_paid": 0,
+      "created_at": "2026-09-24 21:23:29"
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "person_name": "Bạn Tuấn",
+      "type": "lend",
+      "amount": 800000,
+      "due_date": "2026-10-15",
+      "note": "Cho mượn tiền xăng xe",
+      "is_paid": 0,
+      "created_at": "2026-09-24 21:33:47"
+    }
+  ],
+  "recurring_rules": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 13,
+      "type": "expense",
+      "amount": 4500000,
+      "note": "Tiền thuê căn hộ",
+      "frequency": "monthly",
+      "day_of_month": 1,
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 12,
+      "type": "expense",
+      "amount": 850000,
+      "note": "Gói Internet FPT + Điện Nước",
+      "frequency": "monthly",
+      "day_of_month": 5,
+      "created_at": "2026-09-24 21:20:20"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 1,
+      "type": "income",
+      "amount": 22000000,
+      "note": "Lương cố định công ty",
+      "frequency": "monthly",
+      "day_of_month": 1,
+      "created_at": "2026-09-24 21:20:20"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 40,
+      "user_id": 1,
+      "wallet_id": 5,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 150000,
+      "note": "Ăn trưa bún bò Huế",
+      "date": "2026-09-24",
+      "created_at": "2026-09-24 21:22:42",
+      "category_name": "Ăn uống",
+      "wallet_name": "Quỹ Đầu Tư Vàng"
+    },
+    {
+      "id": 38,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 9,
+      "type": "expense",
+      "amount": 450000,
+      "note": "Xem phim CGV",
+      "date": "2026-09-22",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Giải trí",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 34,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 680000,
+      "note": "Ăn uống gia đình",
+      "date": "2026-09-18",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Ăn uống",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 29,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 3,
+      "type": "income",
+      "amount": 1200000,
+      "note": "Tiền lãi tiết kiệm",
+      "date": "2026-09-15",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Đầu tư",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 39,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 10,
+      "type": "expense",
+      "amount": 320000,
+      "note": "Mua thuốc bổ",
+      "date": "2026-09-14",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Y tế",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 36,
+      "user_id": 1,
+      "wallet_id": 4,
+      "category_id": 8,
+      "type": "expense",
+      "amount": 1250000,
+      "note": "Mua quần áo mới Uniqlo",
+      "date": "2026-09-12",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Mua sắm",
+      "wallet_name": "Thẻ Tín Dụng"
+    },
+    {
+      "id": 28,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 2,
+      "type": "income",
+      "amount": 4500000,
+      "note": "Làm dự án Landing Page",
+      "date": "2026-09-10",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Freelance",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 33,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 420000,
+      "note": "Ăn tối cùng bạn bè",
+      "date": "2026-09-08",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Ăn uống",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 35,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 7,
+      "type": "expense",
+      "amount": 350000,
+      "note": "Nạp tiền Xăng + Grab",
+      "date": "2026-09-06",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Di chuyển",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 31,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 12,
+      "type": "expense",
+      "amount": 850000,
+      "note": "Điện + Nước + Wifi",
+      "date": "2026-09-05",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Hóa đơn",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 32,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 550000,
+      "note": "Đi siêu thị WinMart",
+      "date": "2026-09-03",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Ăn uống",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 27,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 1,
+      "type": "income",
+      "amount": 22000000,
+      "note": "Lương nhận chuyển khoản tháng 09",
+      "date": "2026-09-01",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Lương",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 30,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 13,
+      "type": "expense",
+      "amount": 4500000,
+      "note": "Tiền thuê căn hộ tháng này",
+      "date": "2026-09-01",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Nhà ở",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 37,
+      "user_id": 1,
+      "wallet_id": 4,
+      "category_id": 9,
+      "type": "expense",
+      "amount": 260000,
+      "note": "Gói Netflix + Spotify",
+      "date": "2026-09-01",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Giải trí",
+      "wallet_name": "Thẻ Tín Dụng"
+    },
+    {
+      "id": 25,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 9,
+      "type": "expense",
+      "amount": 450000,
+      "note": "Xem phim CGV",
+      "date": "2026-08-22",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Giải trí",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 21,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 680000,
+      "note": "Ăn uống gia đình",
+      "date": "2026-08-18",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Ăn uống",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 16,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 3,
+      "type": "income",
+      "amount": 1200000,
+      "note": "Tiền lãi tiết kiệm",
+      "date": "2026-08-15",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Đầu tư",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 26,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 10,
+      "type": "expense",
+      "amount": 320000,
+      "note": "Mua thuốc bổ",
+      "date": "2026-08-14",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Y tế",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 23,
+      "user_id": 1,
+      "wallet_id": 4,
+      "category_id": 8,
+      "type": "expense",
+      "amount": 1250000,
+      "note": "Mua quần áo mới Uniqlo",
+      "date": "2026-08-12",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Mua sắm",
+      "wallet_name": "Thẻ Tín Dụng"
+    },
+    {
+      "id": 15,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 2,
+      "type": "income",
+      "amount": 4500000,
+      "note": "Làm dự án Landing Page",
+      "date": "2026-08-10",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Freelance",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 20,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 420000,
+      "note": "Ăn tối cùng bạn bè",
+      "date": "2026-08-08",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Ăn uống",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 22,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 7,
+      "type": "expense",
+      "amount": 350000,
+      "note": "Nạp tiền Xăng + Grab",
+      "date": "2026-08-06",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Di chuyển",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 18,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 12,
+      "type": "expense",
+      "amount": 850000,
+      "note": "Điện + Nước + Wifi",
+      "date": "2026-08-05",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Hóa đơn",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 19,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 550000,
+      "note": "Đi siêu thị WinMart",
+      "date": "2026-08-03",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Ăn uống",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 14,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 1,
+      "type": "income",
+      "amount": 22000000,
+      "note": "Lương nhận chuyển khoản tháng 08",
+      "date": "2026-08-01",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Lương",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 17,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 13,
+      "type": "expense",
+      "amount": 4500000,
+      "note": "Tiền thuê căn hộ tháng này",
+      "date": "2026-08-01",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Nhà ở",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 24,
+      "user_id": 1,
+      "wallet_id": 4,
+      "category_id": 9,
+      "type": "expense",
+      "amount": 260000,
+      "note": "Gói Netflix + Spotify",
+      "date": "2026-08-01",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Giải trí",
+      "wallet_name": "Thẻ Tín Dụng"
+    },
+    {
+      "id": 12,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 9,
+      "type": "expense",
+      "amount": 450000,
+      "note": "Xem phim CGV",
+      "date": "2026-07-22",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Giải trí",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 8,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 680000,
+      "note": "Ăn uống gia đình",
+      "date": "2026-07-18",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Ăn uống",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 3,
+      "type": "income",
+      "amount": 1200000,
+      "note": "Tiền lãi tiết kiệm",
+      "date": "2026-07-15",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Đầu tư",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 13,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 10,
+      "type": "expense",
+      "amount": 320000,
+      "note": "Mua thuốc bổ",
+      "date": "2026-07-14",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Y tế",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 10,
+      "user_id": 1,
+      "wallet_id": 4,
+      "category_id": 8,
+      "type": "expense",
+      "amount": 1250000,
+      "note": "Mua quần áo mới Uniqlo",
+      "date": "2026-07-12",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Mua sắm",
+      "wallet_name": "Thẻ Tín Dụng"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 2,
+      "type": "income",
+      "amount": 4500000,
+      "note": "Làm dự án Landing Page",
+      "date": "2026-07-10",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Freelance",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 7,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 420000,
+      "note": "Ăn tối cùng bạn bè",
+      "date": "2026-07-08",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Ăn uống",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 9,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 7,
+      "type": "expense",
+      "amount": 350000,
+      "note": "Nạp tiền Xăng + Grab",
+      "date": "2026-07-06",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Di chuyển",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "wallet_id": 3,
+      "category_id": 12,
+      "type": "expense",
+      "amount": 850000,
+      "note": "Điện + Nước + Wifi",
+      "date": "2026-07-05",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Hóa đơn",
+      "wallet_name": "Ví MoMo"
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "wallet_id": 1,
+      "category_id": 6,
+      "type": "expense",
+      "amount": 550000,
+      "note": "Đi siêu thị WinMart",
+      "date": "2026-07-03",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Ăn uống",
+      "wallet_name": "Tiền mặt"
+    },
+    {
+      "id": 1,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 1,
+      "type": "income",
+      "amount": 22000000,
+      "note": "Lương nhận chuyển khoản tháng 07",
+      "date": "2026-07-01",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Lương",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "wallet_id": 2,
+      "category_id": 13,
+      "type": "expense",
+      "amount": 4500000,
+      "note": "Tiền thuê căn hộ tháng này",
+      "date": "2026-07-01",
+      "created_at": "2026-09-24 21:20:20",
+      "category_name": "Nhà ở",
+      "wallet_name": "Vietcombank"
+    },
+    {
+      "id": 11,
+      "user_id": 1,
+      "wallet_id": 4,
+      "category_id": 9,
+      "type": "expense",
+      "amount": 260000,
+      "note": "Gói Netflix + Spotify",
+      "date": "2026-07-01",
+      "created_at": "2026-09-24 21:20:21",
+      "category_name": "Giải trí",
+      "wallet_name": "Thẻ Tín Dụng"
+    }
+  ]
+}

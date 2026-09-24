@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+database.db
+mingit
+mingit.zip
+.git
+.gitignore
+.env

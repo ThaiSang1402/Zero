@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SpendWise Personal — Ứng dụng Quản lý Chi tiêu Cá nhân Thông minh trên Cloud.">
+  <title>SpendWise Personal — Quản lý Chi Tiêu Cá Nhân</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ==================== AUTH VIEW ==================== -->
+<div id="auth-view">
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">💎</span>
+        <h1>SpendWise Personal</h1>
+        <p>Quản lý tài chính cá nhân thông minh trên Cloud</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Đăng nhập</button>
+        <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Đăng ký</button>
+      </div>
+      <div id="auth-alert" style="display:none"></div>
+      <!-- Login -->
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email">📧 Email</label>
+          <input class="form-control" type="email" id="login-email" placeholder="demo@example.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="login-password">🔑 Mật khẩu</label>
+          <input class="form-control" type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary" type="submit" id="login-btn">
+          <span id="login-btn-text">Đăng nhập</span>
+        </button>
+      </form>
+      <!-- Register -->
+      <form id="register-form" style="display:none" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label for="reg-name">👤 Họ tên</label>
+          <input class="form-control" type="text" id="reg-name" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-email">📧 Email</label>
+          <input class="form-control" type="email" id="reg-email" placeholder="yourname@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-password">🔑 Mật khẩu <small style="color:var(--text-muted)">(≥6 ký tự)</small></label>
+          <input class="form-control" type="password" id="reg-password" placeholder="••••••••" required minlength="6">
+        </div>
+        <button class="btn btn-primary" type="submit" id="register-btn">
+          <span id="register-btn-text">Tạo tài khoản</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== APP VIEW ==================== -->
+<div id="app-view" style="display:none">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="logo-icon-sm">💎</div>
+          <div class="sidebar-logo-text">
+            <h2>SpendWise</h2>
+            <span id="sidebar-role-badge">Personal</span>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Tổng quan</div>
+        <div class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+          <span class="nav-icon">📊</span><span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="transactions" onclick="navigateTo('transactions')">
+          <span class="nav-icon">💳</span><span>Giao dịch</span>
+        </div>
+        <div class="nav-item" data-page="wallets" onclick="navigateTo('wallets')">
+          <span class="nav-icon">👛</span><span>Ví & Tài khoản</span>
+        </div>
+
+        <div class="nav-section-label">Tài chính cá nhân</div>
+        <div class="nav-item" data-page="budgets" onclick="navigateTo('budgets')">
+          <span class="nav-icon">🎯</span><span>Ngân sách</span>
+        </div>
+        <div class="nav-item" data-page="goals" onclick="navigateTo('goals')">
+          <span class="nav-icon">🐖</span><span>Tiết kiệm</span>
+        </div>
+        <div class="nav-item" data-page="debts" onclick="navigateTo('debts')">
+          <span class="nav-icon">📝</span><span>Sổ Vay & Nợ</span>
+        </div>
+        <div class="nav-item" data-page="recurring" onclick="navigateTo('recurring')">
+          <span class="nav-icon">📅</span><span>Thu/Chi Định kỳ</span>
+        </div>
+        <div class="nav-item" data-page="analytics" onclick="navigateTo('analytics')">
+          <span class="nav-icon">📈</span><span>Phân tích</span>
+        </div>
+
+        <div class="nav-section-label">Thao tác nhanh</div>
+        <div class="nav-item" onclick="openAddModal()">
+          <span class="nav-icon">➕</span><span>Thêm giao dịch</span>
+        </div>
+        <div class="nav-item" onclick="openTransferModal()">
+          <span class="nav-icon">🔄</span><span>Chuyển tiền ví</span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar-text">U</div>
+          <div class="user-detail">
+            <div class="user-name" id="sidebar-user-name">...</div>
+            <div class="user-email" id="sidebar-user-email">...</div>
+          </div>
+          <button class="logout-btn" onclick="handleLogout()" title="Đăng xuất">⏻</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div id="page-dashboard" class="page-view active">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>📊 Dashboard Cá Nhân</h1>
+            <p id="dashboard-subtitle">Tổng quan tài chính & ví tiền của bạn</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="month-selector">
+              <button class="month-btn" onclick="changeMonth(-1)">‹</button>
+              <span id="month-display">--/----</span>
+              <button class="month-btn" onclick="changeMonth(1)">›</button>
+            </div>
+            <button class="btn btn-success btn-sm" onclick="openAddModal()">＋ Thêm thu/chi</button>
+          </div>
+        </div>
+
+        <!-- Cảnh báo thông minh (Smart Alerts Container) -->
+        <div id="dashboard-alerts" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px"></div>
+
+        <div class="stats-grid">
+          <div class="stat-card purple"><span class="stat-icon">💰</span><div class="stat-label">Tổng Tài Sản</div><div class="stat-value purple" id="stat-networth">₫0</div><div class="stat-sub">Tổng số dư các ví</div></div>
+          <div class="stat-card green"><span class="stat-icon">📥</span><div class="stat-label">Tổng Thu</div><div class="stat-value green" id="stat-income">₫0</div><div class="stat-sub">Tháng này</div></div>
+          <div class="stat-card red"><span class="stat-icon">📤</span><div class="stat-label">Tổng Chi</div><div class="stat-value red" id="stat-expense">₫0</div><div class="stat-sub">Tháng này</div></div>
+          <div class="stat-card blue"><span class="stat-icon">🔢</span><div class="stat-label">Giao Dịch</div><div class="stat-value blue" id="stat-count">0</div><div class="stat-sub">Tháng này</div></div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
+          <div class="section-header">
+            <span class="section-title">👛 Danh sách Ví & Tài khoản</span>
+            <button class="btn btn-ghost btn-sm" onclick="navigateTo('wallets')">Quản lý ví →</button>
+          </div>
+          <div id="dashboard-wallets" class="wallets-grid"></div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="section-header"><span class="section-title">📉 Thu chi 6 tháng gần nhất</span></div>
+            <div class="chart-container"><canvas id="monthly-chart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="section-header"><span class="section-title">🏷️ Chi theo danh mục</span></div>
+            <div id="cat-breakdown" class="cat-list"><div class="loading-wrap"><div class="loading-spinner"></div></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-header">
+            <span class="section-title">🕐 Giao dịch mới nhất</span>
+            <button class="btn btn-ghost btn-sm" onclick="navigateTo('transactions')">Xem tất cả →</button>
+          </div>
+          <div id="recent-transactions" class="tx-list"><div class="loading-wrap"><div class="loading-spinner"></div></div></div>
+        </div>
+      </div>
+
+      <!-- ===== TRANSACTIONS ===== -->
+      <div id="page-transactions" class="page-view">
+        <div class="page-header">
+          <div class="page-title"><h1>💳 Lịch Sử Giao Dịch</h1><p>Quản lý toàn bộ thu nhập & chi tiêu</p></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-primary" onclick="exportCSV()">⬇️ Xuất CSV</button>
+            <button class="btn btn-success" onclick="openAddModal()">＋ Thêm giao dịch</button>
+          </div>
+        </div>
+        <div class="tx-filters">
+          <input class="form-control" type="month" id="filter-month" onchange="loadTransactions()">
+          <select class="form-control" id="filter-type" onchange="loadTransactions()">
+            <option value="">Tất cả loại</option>
+            <option value="income">💚 Thu nhập</option>
+            <option value="expense">❤️ Chi tiêu</option>
+          </select>
+          <select class="form-control" id="filter-wallet" onchange="loadTransactions()">
+            <option value="">Tất cả Ví tiền</option>
+          </select>
+          <select class="form-control" id="filter-category" onchange="loadTransactions()">
+            <option value="">Tất cả danh mục</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="clearFilters()">✕ Xóa lọc</button>
+        </div>
+        <div id="transactions-list" class="tx-list"><div class="loading-wrap"><div class="loading-spinner"></div></div></div>
+      </div>
+
+      <!-- ===== WALLETS ===== -->
+      <div id="page-wallets" class="page-view">
+        <div class="page-header">
+          <div class="page-title"><h1>👛 Quản Lý Ví & Tài Khoản</h1><p>Quản lý dòng tiền từ các tài khoản cá nhân</p></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-primary" onclick="openTransferModal()">🔄 Chuyển tiền</button>
+            <button class="btn btn-success" onclick="openAddWalletModal()">＋ Thêm ví mới</button>
+          </div>
+        </div>
+        <div id="wallets-grid" class="wallets-grid"></div>
+      </div>
+
+      <!-- ===== BUDGETS ===== -->
+      <div id="page-budgets" class="page-view">
+        <div class="page-header">
+          <div class="page-title"><h1>🎯 Ngân Sách Chi Tiêu</h1><p>Kiểm soát hạn mức và cảnh báo vượt chi hàng tháng</p></div>
+          <button class="btn btn-success" onclick="openAddBudgetModal()">＋ Đặt hạn mức mới</button>
+        </div>
+        <div id="budgets-list" class="budgets-list"></div>
+      </div>
+
+      <!-- ===== GOALS ===== -->
+      <div id="page-goals" class="page-view">
+        <div class="page-header">
+          <div class="page-title"><h1>🐖 Mục Tiêu Tiết Kiệm</h1><p>Tích lũy tài chính cho các mục tiêu cá nhân</p></div>
+          <button class="btn btn-success" onclick="openAddGoalModal()">＋ Mục tiêu mới</button>
+        </div>
+        <div id="goals-grid" class="goals-grid"></div>
+      </div>
+
+      <!-- ===== DEBTS ===== -->
+      <div id="page-debts" class="page-view">
+        <div class="page-header">
+          <div class="page-title"><h1>📝 Sổ Vay & Nợ</h1><p>Theo dõi các khoản tiền vay & cho vay</p></div>
+          <button class="btn btn-success" onclick="openAddDebtModal()">＋ Thêm khoản nợ</button>
+        </div>
+        <div id="debts-list" class="debts-list"></div>
+      </div>
+
+      <!-- ===== RECURRING ===== -->
+      <div id="page-recurring" class="page-view">
+        <div class="page-header">
+          <div class="page-title"><h1>📅 Thu / Chi Định Kỳ</h1><p>Tự động lập lịch & ghi nhận nhanh các khoản cố định</p></div>
+          <button class="btn btn-success" onclick="openAddRecurringModal()">＋ Thêm lặp lại mới</button>
+        </div>
+        <div id="recurring-list" class="tx-list"></div>
+      </div>
+
+      <!-- ===== ANALYTICS ===== -->
+      <div id="page-analytics" class="page-view">
+        <div class="page-header"><div class="page-title"><h1>📈 Phân Tích Tài Chính</h1><p>Thống kê chi tiết & xu hướng dòng tiền</p></div></div>
+        <div class="stats-grid" style="margin-bottom:24px">
+          <div class="card" style="padding:20px">
+            <div class="card-title">Biểu đồ tròn — Tỷ lệ chi tiêu</div>
+            <div style="position:relative;height:240px;margin-top:12px"><canvas id="pie-chart"></canvas></div>
+          </div>
+          <div class="card" style="padding:20px">
+            <div class="card-title">Thu nhập & Chi tiêu 6 tháng</div>
+            <div style="position:relative;height:240px;margin-top:12px"><canvas id="bar-chart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-header" style="margin-bottom:16px"><span class="section-title">📋 Tất cả danh mục</span></div>
+          <div id="analytics-cat-list" class="cat-list"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD/EDIT TRANSACTION ===== -->
+<div id="modal-overlay" class="modal-overlay" style="display:none" onclick="handleOverlayClick(event)">
+  <div class="modal" id="tx-modal">
+    <div class="modal-header">
+      <h2 id="modal-title">➕ Thêm giao dịch</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-alert" style="display:none"></div>
+      <div class="type-toggle">
+        <button class="type-btn active expense" id="btn-expense" type="button" onclick="setTxType('expense')">📤 Chi tiêu</button>
+        <button class="type-btn income" id="btn-income" type="button" onclick="setTxType('income')">📥 Thu nhập</button>
+      </div>
+      <form id="tx-form" onsubmit="handleSubmitTransaction(event)">
+        <input type="hidden" id="edit-tx-id">
+        <div class="form-group">
+          <label for="tx-amount">💵 Số tiền (VNĐ)</label>
+          <div class="amount-input-wrap">
+            <span class="amount-prefix">₫</span>
+            <input class="form-control" type="number" id="tx-amount" placeholder="0" min="1" required>
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="tx-wallet">👛 Ví / Tài khoản</label>
+            <select class="form-control" id="tx-wallet" required></select>
+          </div>
+          <div class="form-group">
+            <label for="tx-category">🏷️ Danh mục</label>
+            <select class="form-control" id="tx-category" required></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tx-date">📅 Ngày giao dịch</label>
+          <input class="form-control" type="date" id="tx-date" required>
+        </div>
+        <div class="form-group">
+          <label for="tx-note">📝 Ghi chú (tùy chọn)</label>
+          <input class="form-control" type="text" id="tx-note" placeholder="Mô tả chi tiết giao dịch...">
+        </div>
+        <div class="modal-footer" style="margin-top:12px">
+          <button type="button" class="btn btn-ghost" onclick="closeModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="submit-btn" style="width:auto">
+            <span id="submit-btn-text">Lưu giao dịch</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD RECURRING ===== -->
+<div id="recurring-overlay" class="modal-overlay" style="display:none" onclick="closeRecurringModal()">
+  <div class="modal" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>📅 Thêm Khoản Thu / Chi Định Kỳ</h2>
+      <button class="modal-close" onclick="closeRecurringModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="type-toggle">
+        <button class="type-btn active expense" id="rec-btn-expense" type="button" onclick="setRecType('expense')">📤 Chi tiêu</button>
+        <button class="type-btn income" id="rec-btn-income" type="button" onclick="setRecType('income')">📥 Thu nhập</button>
+      </div>
+      <form id="recurring-form" onsubmit="handleSubmitRecurring(event)">
+        <div class="form-group">
+          <label for="rec-note">Tên khoản tiền (Mô tả)</label>
+          <input class="form-control" type="text" id="rec-note" placeholder="Ví dụ: Tiền nhà, Tiền điện, Lương cố định" required>
+        </div>
+        <div class="form-group">
+          <label for="rec-amount">Số tiền (VNĐ)</label>
+          <input class="form-control" type="number" id="rec-amount" placeholder="0" min="1000" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="rec-wallet">Trừ/Cộng ví tiền</label>
+            <select class="form-control" id="rec-wallet" required></select>
+          </div>
+          <div class="form-group">
+            <label for="rec-category">Danh mục</label>
+            <select class="form-control" id="rec-category" required></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="rec-day">Lặp lại ngày trong tháng</label>
+          <input class="form-control" type="number" id="rec-day" min="1" max="31" value="1" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeRecurringModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="width:auto">Lưu định kỳ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD/EDIT WALLET ===== -->
+<div id="wallet-overlay" class="modal-overlay" style="display:none" onclick="closeWalletModal()">
+  <div class="modal" style="max-width:420px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="wallet-modal-title">👛 Thêm Ví mới</h2>
+      <button class="modal-close" onclick="closeWalletModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="wallet-form" onsubmit="handleSubmitWallet(event)">
+        <input type="hidden" id="edit-wallet-id">
+        <div class="form-group">
+          <label for="wallet-name">Tên Ví / Tài khoản</label>
+          <input class="form-control" type="text" id="wallet-name" placeholder="Ví dụ: Techcombank, Ví Tiền mặt" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="wallet-type">Loại Ví</label>
+            <select class="form-control" id="wallet-type">
+              <option value="cash">💵 Tiền mặt</option>
+              <option value="bank">🏦 Tài khoản Ngân hàng</option>
+              <option value="ewallet">📱 Ví điện tử</option>
+              <option value="credit">💳 Thẻ tín dụng</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="wallet-icon">Icon biểu tượng</label>
+            <input class="form-control" type="text" id="wallet-icon" value="💵">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="wallet-balance">Số dư ban đầu (VNĐ)</label>
+            <input class="form-control" type="number" id="wallet-balance" placeholder="0" required>
+          </div>
+          <div class="form-group">
+            <label for="wallet-color">Màu nhận diện</label>
+            <input class="form-control" type="color" id="wallet-color" value="#10b981" style="height:44px;padding:4px 8px">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeWalletModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="width:auto">Lưu Ví</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: TRANSFER BETWEEN WALLETS ===== -->
+<div id="transfer-overlay" class="modal-overlay" style="display:none" onclick="closeTransferModal()">
+  <div class="modal" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🔄 Chuyển tiền giữa các ví</h2>
+      <button class="modal-close" onclick="closeTransferModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="transfer-form" onsubmit="handleSubmitTransfer(event)">
+        <div class="form-group">
+          <label for="transfer-from">Ví nguồn (Rút tiền)</label>
+          <select class="form-control" id="transfer-from" required></select>
+        </div>
+        <div class="form-group">
+          <label for="transfer-to">Ví đích (Nhận tiền)</label>
+          <select class="form-control" id="transfer-to" required></select>
+        </div>
+        <div class="form-group">
+          <label for="transfer-amount">Số tiền chuyển (VNĐ)</label>
+          <input class="form-control" type="number" id="transfer-amount" placeholder="0" min="1" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeTransferModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="width:auto">Xác nhận chuyển</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD BUDGET ===== -->
+<div id="budget-overlay" class="modal-overlay" style="display:none" onclick="closeBudgetModal()">
+  <div class="modal" style="max-width:420px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🎯 Đặt Ngân Sách Danh Mục</h2>
+      <button class="modal-close" onclick="closeBudgetModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="budget-form" onsubmit="handleSubmitBudget(event)">
+        <div class="form-group">
+          <label for="budget-category">Danh mục chi tiêu</label>
+          <select class="form-control" id="budget-category" required></select>
+        </div>
+        <div class="form-group">
+          <label for="budget-limit">Hạn mức chi tiêu tháng (VNĐ)</label>
+          <input class="form-control" type="number" id="budget-limit" placeholder="5000000" min="10000" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeBudgetModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="width:auto">Lưu hạn mức</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD GOAL ===== -->
+<div id="goal-overlay" class="modal-overlay" style="display:none" onclick="closeGoalModal()">
+  <div class="modal" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🐖 Tạo Mục Tiêu Tiết Kiệm</h2>
+      <button class="modal-close" onclick="closeGoalModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="goal-form" onsubmit="handleSubmitGoal(event)">
+        <div class="form-group">
+          <label for="goal-name">Tên mục tiêu</label>
+          <input class="form-control" type="text" id="goal-name" placeholder="Ví dụ: Mua Macbook M3, Quỹ dự phòng" required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="goal-target">Số tiền mục tiêu (VNĐ)</label>
+            <input class="form-control" type="number" id="goal-target" placeholder="20000000" min="100000" required>
+          </div>
+          <div class="form-group">
+            <label for="goal-current">Đã tích lũy (VNĐ)</label>
+            <input class="form-control" type="number" id="goal-current" placeholder="0">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="goal-deadline">Hạn chót (tùy chọn)</label>
+            <input class="form-control" type="date" id="goal-deadline">
+          </div>
+          <div class="form-group">
+            <label for="goal-icon">Icon</label>
+            <input class="form-control" type="text" id="goal-icon" value="💻">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeGoalModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="width:auto">Tạo mục tiêu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: DEPOSIT GOAL ===== -->
+<div id="deposit-overlay" class="modal-overlay" style="display:none" onclick="closeDepositModal()">
+  <div class="modal" style="max-width:400px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>💰 Nạp Tiền Vào Mục Tiêu</h2>
+      <button class="modal-close" onclick="closeDepositModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="deposit-form" onsubmit="handleSubmitDeposit(event)">
+        <input type="hidden" id="deposit-goal-id">
+        <div class="form-group">
+          <label for="deposit-wallet">Rút từ ví tiền</label>
+          <select class="form-control" id="deposit-wallet" required></select>
+        </div>
+        <div class="form-group">
+          <label for="deposit-amount">Số tiền nạp (VNĐ)</label>
+          <input class="form-control" type="number" id="deposit-amount" placeholder="1000000" min="1000" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeDepositModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="width:auto">Nạp ngay</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD DEBT ===== -->
+<div id="debt-overlay" class="modal-overlay" style="display:none" onclick="closeDebtModal()">
+  <div class="modal" style="max-width:420px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>📝 Thêm Khoản Vay / Nợ</h2>
+      <button class="modal-close" onclick="closeDebtModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="debt-form" onsubmit="handleSubmitDebt(event)">
+        <div class="form-group">
+          <label for="debt-type">Loại khoản tiền</label>
+          <select class="form-control" id="debt-type" required>
+            <option value="lend">🤝 Cho người khác vay (Người ta nợ tôi)</option>
+            <option value="borrow">📥 Tôi đi vay (Tôi nợ người ta)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="debt-person">Tên người liên quan</label>
+          <input class="form-control" type="text" id="debt-person" placeholder="Tên bạn bè, đồng nghiệp..." required>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="debt-amount">Số tiền (VNĐ)</label>
+            <input class="form-control" type="number" id="debt-amount" placeholder="500000" min="1000" required>
+          </div>
+          <div class="form-group">
+            <label for="debt-due">Hạn hẹn trả</label>
+            <input class="form-control" type="date" id="debt-due">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="debt-note">Ghi chú</label>
+          <input class="form-control" type="text" id="debt-note" placeholder="Lý do vay/nợ...">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeDebtModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="width:auto">Lưu khoản nợ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: DELETE CONFIRM ===== -->
+<div id="confirm-overlay" class="modal-overlay" style="display:none" onclick="closeConfirm()">
+  <div class="modal" style="max-width:380px" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🗑️ Xác nhận xóa</h2>
+      <button class="modal-close" onclick="closeConfirm()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary);margin-bottom:20px">Bạn có chắc chắn muốn xóa không? Hành động này không thể hoàn tác.</p>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeConfirm()">Hủy</button>
+        <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDelete()">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

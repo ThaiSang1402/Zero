@@ -1,0 +1,155 @@
+{
+  "summary": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "passRate": "100.0",
+    "avgDuration": "28.0"
+  },
+  "results": [
+    {
+      "id": "TC-01",
+      "name": "Kiểm tra trạng thái máy chủ (Health Check)",
+      "input": "GET /api/health",
+      "expected": "status: 200, status=\"ok\"",
+      "actual": "status: 200, body={\"status\":\"ok\",\"message\":\"SpendWise Personal đang chạy!\",\"timestamp\":\"2026-09-24T21:33:47.192Z\"}",
+      "result": "PASS",
+      "duration": 90
+    },
+    {
+      "id": "TC-02",
+      "name": "Tải giao diện Frontend (SPA Index.html)",
+      "input": "GET /",
+      "expected": "status: 200, chứa HTML SpendWise",
+      "actual": "status: 200, length=28937 chars",
+      "result": "PASS",
+      "duration": 8
+    },
+    {
+      "id": "TC-03",
+      "name": "Xác thực: Đăng nhập sai mật khẩu",
+      "input": "POST /api/auth/login (password: wrongpassword)",
+      "expected": "status: 401, error message",
+      "actual": "status: 401, error=Email hoặc mật khẩu không đúng.",
+      "result": "PASS",
+      "duration": 110
+    },
+    {
+      "id": "TC-04",
+      "name": "Xác thực: Đăng nhập thành công",
+      "input": "POST /api/auth/login (demo@example.com / demo123)",
+      "expected": "status: 200, trả JWT token & user profile",
+      "actual": "status: 200, user=Nguyễn Văn A",
+      "result": "PASS",
+      "duration": 91
+    },
+    {
+      "id": "TC-05",
+      "name": "Bảo mật: Truy cập Protected API không có Token",
+      "input": "GET /api/wallets (No Auth)",
+      "expected": "status: 401 Unauthorized",
+      "actual": "status: 401, error=Chưa đăng nhập. Vui lòng đăng nhập để tiếp tục.",
+      "result": "PASS",
+      "duration": 8
+    },
+    {
+      "id": "TC-06",
+      "name": "Dashboard: Tải số liệu tổng quan & biểu đồ",
+      "input": "GET /api/dashboard/summary",
+      "expected": "status: 200, có summary, alerts, wallets, chart",
+      "actual": "status: 200, net_worth=85,150,000đ",
+      "result": "PASS",
+      "duration": 18
+    },
+    {
+      "id": "TC-07",
+      "name": "Ví tài chính: Lấy danh sách ví của người dùng",
+      "input": "GET /api/wallets",
+      "expected": "status: 200, danh sách >= 4 ví tiền",
+      "actual": "status: 200, số lượng ví=7",
+      "result": "PASS",
+      "duration": 4
+    },
+    {
+      "id": "TC-08",
+      "name": "Ví tài chính: Tạo mới ví cá nhân",
+      "input": "POST /api/wallets (Quỹ Đầu Tư Vàng, 15.000.000đ)",
+      "expected": "status: 201, trả object ví có ID",
+      "actual": "status: 201, ví_id=8, tên=Quỹ Đầu Tư Vàng",
+      "result": "PASS",
+      "duration": 16
+    },
+    {
+      "id": "TC-09",
+      "name": "Giao dịch: Thêm mới chi tiêu (Trừ tiền ví)",
+      "input": "POST /api/transactions (Chi ăn uống 150.000đ)",
+      "expected": "status: 201, tạo thành công & cập nhật số dư ví",
+      "actual": "status: 201, tx_id=43",
+      "result": "PASS",
+      "duration": 14
+    },
+    {
+      "id": "TC-10",
+      "name": "Validation: Thêm giao dịch với số tiền không hợp lệ",
+      "input": "POST /api/transactions (amount: -50.000đ)",
+      "expected": "status: 400, thông báo lỗi số tiền",
+      "actual": "status: 400, error=Số tiền phải lớn hơn 0.",
+      "result": "PASS",
+      "duration": 13
+    },
+    {
+      "id": "TC-11",
+      "name": "Giao dịch: Bộ lọc theo loại chi tiêu",
+      "input": "GET /api/transactions?type=expense",
+      "expected": "status: 200, danh sách chỉ chứa khoản chi",
+      "actual": "status: 200, số lượng=10",
+      "result": "PASS",
+      "duration": 16
+    },
+    {
+      "id": "TC-12",
+      "name": "Ngân sách: Thiết lập hạn mức chi tiêu tháng",
+      "input": "POST /api/budgets (Y tế, Hạn mức 1.200.000đ)",
+      "expected": "status: 200/201, lưu ngân sách thành công",
+      "actual": "status: 200, budget_id=5",
+      "result": "PASS",
+      "duration": 17
+    },
+    {
+      "id": "TC-13",
+      "name": "Tiết kiệm: Tạo mục tiêu tiết kiệm mới",
+      "input": "POST /api/goals (Mục tiêu 5.000.000đ)",
+      "expected": "status: 201, tạo mục tiêu thành công",
+      "actual": "status: 201, goal_id=7",
+      "result": "PASS",
+      "duration": 15
+    },
+    {
+      "id": "TC-14",
+      "name": "Sổ nợ: Ghi nhận khoản cho vay",
+      "input": "POST /api/debts (Cho bạn Tuấn vay 800.000đ)",
+      "expected": "status: 201, ghi nhận khoản nợ",
+      "actual": "status: 201, debt_id=6",
+      "result": "PASS",
+      "duration": 4
+    },
+    {
+      "id": "TC-15",
+      "name": "Giao dịch: Xóa giao dịch và hoàn số dư ví",
+      "input": "DELETE /api/transactions/43",
+      "expected": "status: 200, số dư ví hoàn lại",
+      "actual": "status: 200, msg=Đã xóa giao dịch thành công.",
+      "result": "PASS",
+      "duration": 4
+    },
+    {
+      "id": "TC-16",
+      "name": "Bảo mật: Ngăn chặn tấn công SQL Injection",
+      "input": "GET /api/transactions?month=' OR '1'='1",
+      "expected": "status: 200, query được parameterize an toàn không leak",
+      "actual": "status: 200, trả mảng rỗng hoặc đúng chuẩn",
+      "result": "PASS",
+      "duration": 20
+    }
+  ]
+}
